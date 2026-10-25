@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Casa D'Laman Qaseh ~connecting hearts~</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#fdf8f6',
+                            100: '#fbe8e3',
+                            500: '#8B4513',
+                            600: '#703610',
+                            700: '#582b0c',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .carousel-item { display: none; }
+        .carousel-item.active { display: block; }
+    </style>
+</head>
+<body class="bg-stone-50 text-stone-800 font-sans antialiased selection:bg-brand-500 selection:text-white">
+
+    <!-- TOP BAR -->
+    <header class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-stone-200 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-full bg-brand-500 flex items-center justify-center text-white font-serif text-xl font-bold shadow-md">
+                    C
+                </div>
+                <div>
+                    <h1 class="text-lg sm:text-xl font-serif font-bold text-stone-900 tracking-tight">Casa D'Laman Qaseh</h1>
+                    <p class="text-xs text-brand-500 italic tracking-wider">~connecting hearts~</p>
+                </div>
+            </div>
+
+            <!-- NAVIGATION & INTERFACE SWITCHER -->
+            <div class="flex items-center space-x-3">
+                <div class="hidden sm:flex items-center space-x-2 text-xs font-medium bg-stone-100 px-3 py-1.5 rounded-full text-stone-600">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                    <span>Live Availability Active</span>
+                </div>
+
+                <button onclick="toggleInterface()" id="interface-toggle-btn" class="bg-brand-500 hover:bg-brand-600 text-white text-xs sm:text-sm font-medium px-4 py-2 rounded-xl shadow transition flex items-center space-x-2">
+                    <i class="fa-solid fa-lock text-xs"></i>
+                    <span id="toggle-btn-text">Owner Login</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- OWNER LOGIN MODAL -->
+    <div id="login-modal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl relative border border-stone-100">
+            <button onclick="closeLoginModal()" class="absolute top-4 right-4 text-stone-400 hover:text-stone-600 p-2">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+            <div class="text-center mb-6">
+                <div class="w-12 h-12 bg-brand-100 text-brand-500 rounded-full flex items-center justify-center mx-auto mb-3 text-xl">
+                    <i class="fa-solid fa-shield-halved"></i>
+                </div>
+                <h3 class="text-xl font-serif font-bold text-stone-900">Owner Secure Login</h3>
+                <p class="text-xs text-stone-500 mt-1">Enter your phone number and OTP verification passcode</p>
+            </div>
+
+            <form id="otp-form" onsubmit="handleOwnerLogin(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-stone-600 mb-1">Owner Phone Number</label>
+                    <input type="text" id="owner-phone" placeholder="e.g. +60173355970" required 
+                           class="w-full px-4 py-2.5 text-sm border border-stone-300 rounded-xl focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-stone-600 mb-1">OTP Passcode</label>
+                    <input type="password" id="owner-otp" placeholder="Enter 4-digit code" maxlength="4" required 
+                           class="w-full px-4 py-2.5 text-sm border border-stone-300 rounded-xl focus:ring-2 focus:ring-brand-500 focus:outline-none text-center tracking-widest font-bold text-lg">
+                </div>
+                <div class="pt-2">
+                    <button type="submit" class="w-full bg-brand-500 hover:bg-brand-600 text-white font-medium py-3 rounded-xl shadow transition text-sm">
+                        Verify & Access Owner Dashboard
+                    </button>
+                </div>
+                <p class="text-[11px] text-stone-400 text-center mt-2">Authorized hosts: Norrizah, Illiana, Zainul Afiq</p>
+            </form>
+        </div>
+    </div>
+
+    <!-- MAIN CONTAINER -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-8">
+
+        <!-- PROMOTIONAL BANNER SECTION -->
+        <div id="promo-banner-container" class="bg-gradient-to-r from-amber-500 to-brand-500 text-white rounded-2xl p-4 sm:p-6 shadow-lg flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="flex items-center space-x-4">
+                <div class="w-12 h-12 bg-white/20 backdrop-blur rounded-full flex items-center justify-center shrink-0">
+                    <i class="fa-solid fa-bullhorn text-xl"></i>
+                </div>
+                <div>
+                    <span class="bg-white/30 text-white text-[10px] uppercase font-bold tracking-wider px-2.5 py-0.5 rounded-full">Special Announcement</span>
+                    <h2 id="banner-title" class="text-lg sm:text-xl font-bold mt-1">School Holiday & Year-End Special Discount!</h2>
+                    <p id="banner-desc" class="text-xs sm:text-sm text-white/90">Enjoy 14-days free refundable booking or special promotional rates across all weekends this month.</p>
+                </div>
+            </div>
+            <a href="#booking-calendar-section" class="bg-white text-stone-900 font-semibold px-5 py-2.5 rounded-xl text-xs sm:text-sm shadow hover:bg-stone-100 transition whitespace-nowrap">
+                Check Dates
+            </a>
+        </div>
+
+        <!-- HERO & GALLERY SLIDESHOW SECTION -->
+        <section class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+
+            <!-- Left: Gallery Slideshow -->
+            <div class="lg:col-span-7 bg-white rounded-3xl p-4 sm:p-6 shadow-sm border border-stone-100">
+                <div class="relative rounded-2xl overflow-hidden shadow-md bg-stone-900 h-64 sm:h-96" id="slideshow-wrapper">
+                    <!-- Slides inserted dynamically -->
+                </div>
+
+                <!-- Thumbnails -->
+                <div id="thumbnail-container" class="flex items-center space-x-3 mt-4 overflow-x-auto pb-2">
+                    <!-- Thumbnails inserted dynamically -->
+                </div>
+            </div>
+
+            <!-- Right: Property Overview & Facilities -->
+            <div class="lg:col-span-5 bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-stone-100 space-y-6">
+                <div>
+                    <div class="flex items-center space-x-2 text-xs font-semibold uppercase tracking-wider text-brand-500 mb-1">
+                        <span>Luxury Homestay & Event Sanctuary</span>
+                    </div>
+                    <h2 class="text-2xl sm:text-3xl font-serif font-bold text-stone-900">Casa D'Laman Qaseh</h2>
+                    <p class="text-stone-500 text-sm mt-2 leading-relaxed">
+                        Experience ultimate comfort and serenity. Perfect for family gatherings, reunions, weekend getaways, and private celebrations.
+                    </p>
+                </div>
+
+                <div class="border-t border-stone-100 pt-5">
+                    <h4 class="text-xs font-bold uppercase tracking-wider text-stone-400 mb-3">Key Facilities & Amenities</h4>
+                    <div class="grid grid-cols-2 gap-3 text-sm">
+                        <div class="flex items-center space-x-3 text-stone-700 bg-stone-50 p-2.5 rounded-xl">
+                            <i class="fa-solid fa-water-ladder text-brand-500 w-5"></i>
+                            <span class="text-xs font-medium">Serenity Gem And Private Swimming Pool</span>
+                        </div>
+                        <div class="flex items-center space-x-3 text-stone-700 bg-stone-50 p-2.5 rounded-xl">
+                            <i class="fa-solid fa-users-rectangle text-brand-500 w-5"></i>
+                            <span class="text-xs font-medium">Event space for 40 people</span>
+                        </div>
+                        <div class="flex items-center space-x-3 text-stone-700 bg-stone-50 p-2.5 rounded-xl">
+                            <i class="fa-solid fa-tree text-brand-500 w-5"></i>
+                            <span class="text-xs font-medium">Spacious Garden Lawn</span>
+                        </div>
+                        <div class="flex items-center space-x-3 text-stone-700 bg-stone-50 p-2.5 rounded-xl">
+                            <i class="fa-solid fa-wifi text-brand-500 w-5"></i>
+                            <span class="text-xs font-medium">High-Speed WiFi</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="border-t border-stone-100 pt-4 flex items-center justify-between text-xs text-stone-500">
+                    <div class="flex items-center space-x-1 text-amber-500 font-bold">
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <span class="text-stone-700 ml-1">4.98 (124 Reviews)</span>
+                    </div>
+                    <span class="font-medium text-brand-600">Instant WhatsApp Booking</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- DASHBOARD CONTAINER -->
+        <div id="dashboard-container" class="space-y-8">
+
+            <!-- GUEST VIEW -->
+            <section id="guest-view" class="bg-white rounded-3xl p-4 sm:p-8 shadow-sm border border-stone-100 space-y-6" id="booking-calendar-section">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-stone-100 pb-6">
+                    <div>
+                        <h3 class="text-xl sm:text-2xl font-serif font-bold text-stone-900">Live Availability & Rates Calendar</h3>
+                        <p class="text-xs sm:text-sm text-stone-500">Select your preferred dates below to check live rates and reserve instantly.</p>
+                    </div>
+
+                    <!-- Month Switcher -->
+                    <div class="flex items-center space-x-3 bg-stone-50 p-1.5 rounded-2xl border border-stone-200 self-start sm:self-auto">
+                        <button onclick="changeMonth(-1)" class="w-9 h-9 rounded-xl bg-white shadow-sm flex items-center justify-center hover:bg-stone-100 text-stone-700 transition">
+                            <i class="fa-solid fa-chevron-left text-xs"></i>
+                        </button>
+                        <span id="current-month-label" class="text-sm font-bold px-4 text-stone-800">October 2026</span>
+                        <button onclick="changeMonth(1)" class="w-9 h-9 rounded-xl bg-white shadow-sm flex items-center justify-center hover:bg-stone-100 text-stone-700 transition">
+                            <i class="fa-solid fa-chevron-right text-xs"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Color Legend -->
+                <div class="flex flex-wrap items-center gap-3 text-xs font-medium text-stone-600 bg-stone-50 p-3 rounded-2xl">
+                    <div class="flex items-center space-x-1.5"><span class="w-3.5 h-3.5 rounded-lg bg-stone-200 border border-stone-300"></span><span>Weekday</span></div>
+                    <div class="flex items-center space-x-1.5"><span class="w-3.5 h-3.5 rounded-lg bg-blue-100 border border-blue-300 text-blue-600"></span><span>Weekend</span></div>
+                    <div class="flex items-center space-x-1.5"><span class="w-3.5 h-3.5 rounded-lg bg-amber-100 border border-amber-300 text-amber-600"></span><span>Public Holiday</span></div>
+                    <div class="flex items-center space-x-1.5"><span class="w-3.5 h-3.5 rounded-lg bg-purple-100 border border-purple-300 text-purple-600"></span><span>School Holiday</span></div>
+                    <div class="flex items-center space-x-1.5"><span class="w-3.5 h-3.5 rounded-lg bg-rose-100 border border-rose-300 text-rose-600"></span><span>Booked</span></div>
+                </div>
+
+                <!-- Calendar Grid -->
+                <div class="overflow-x-auto">
+                    <div class="min-w-[650px]">
+                        <div class="grid grid-cols-7 gap-2 text-center text-xs font-bold uppercase tracking-wider text-stone-400 mb-3">
+                            <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
+                        </div>
+                        <div id="calendar-grid" class="grid grid-cols-7 gap-2"></div>
+                    </div>
+                </div>
+
+                <!-- Cancellation Policies Info -->
+                <div class="bg-blue-50/60 border border-blue-100 rounded-2xl p-4 text-xs text-blue-900 space-y-1.5">
+                    <div class="font-bold flex items-center space-x-2">
+                        <i class="fa-solid fa-circle-info text-blue-600"></i>
+                        <span>Special Cancellation Policies:</span>
+                    </div>
+                    <p>• <strong class="text-blue-950">14 Days Free Refundable Special:</strong> 100% full refund up to 14 days prior to check-in date.</p>
+                    <p>• <strong class="text-blue-950">7 Days Partial Refundable:</strong> 50% partial refund up to 7 days prior to check-in date.</p>
+                </div>
+
+                <!-- Reservation Form Summary -->
+                <div class="bg-stone-50 border border-stone-200 rounded-3xl p-5 sm:p-6 space-y-6">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-stone-200/60 pb-4">
+                        <div>
+                            <span class="text-xs font-bold uppercase tracking-wider text-brand-500">Selected Date Summary</span>
+                            <h4 id="summary-date-text" class="text-lg font-bold text-stone-900 mt-0.5">Please select a date from the calendar above</h4>
+                        </div>
+                        <div id="summary-policy-badge" class="hidden">
+                            <span class="px-3 py-1 bg-emerald-100 text-emerald-800 text-xs font-bold rounded-full">14 Days Free Refundable</span>
+                        </div>
+                    </div>
+
+                    <form onsubmit="sendWhatsAppBooking(event)" class="grid grid-cols-1 sm:grid-cols-3 gap-4 items-end">
+                        <div>
+                            <label class="block text-xs font-semibold uppercase tracking-wider text-stone-600 mb-1">Your Full Name</label>
+                            <input type="text" id="guest-name" placeholder="e.g. Ahmad Hafiz" required 
+                                   class="w-full px-4 py-2.5 text-sm bg-white border border-stone-300 rounded-xl focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold uppercase tracking-wider text-stone-600 mb-1">Your Phone Number</label>
+                            <input type="tel" id="guest-phone" placeholder="e.g. 0123456789" required 
+                                   class="w-full px-4 py-2.5 text-sm bg-white border border-stone-300 rounded-xl focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold uppercase tracking-wider text-stone-600 mb-1">Send Booking To Host:</label>
+                            <select id="host-whatsapp-target" class="w-full px-4 py-2.5 text-sm bg-white border border-stone-300 rounded-xl focus:ring-2 focus:ring-brand-500 focus:outline-none font-medium text-stone-800">
+                                <option value="60173355970">Norrizah (+6017 335 5970)</option>
+                                <option value="60133537603">Illiana (+6013 353 7603)</option>
+                                <option value="60186638327">Zainul Afiq (+6018 663 8327)</option>
+                            </select>
+                        </div>
+                        <div class="sm:col-span-3 flex flex-col sm:flex-row items-center justify-between pt-2 gap-4">
+                            <div class="text-sm">
+                                <span class="text-stone-500">Active Rate: </span>
+                                <span id="summary-price-display" class="text-xl font-bold text-rose-600">RM 0</span>
+                                <span id="summary-original-price-display" class="text-sm line-through text-blue-600 ml-2"></span>
+                            </div>
+                            <button type="submit" class="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-700 text-white font-medium px-8 py-3 rounded-xl shadow-lg transition flex items-center justify-center space-x-2">
+                                <i class="fa-brands fa-whatsapp text-lg"></i>
+                                <span>Book via WhatsApp Now</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+            <!-- OWNER DASHBOARD -->
+            <section id="owner-dashboard" class="bg-white rounded-3xl p-4 sm:p-8 shadow-sm border border-stone-100 space-y-8 hidden">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-stone-100 pb-6">
+                    <div>
+                        <div class="flex items-center space-x-2">
+                            <span class="w-3 h-3 rounded-full bg-emerald-500"></span>
+                            <span class="text-xs font-bold uppercase tracking-wider text-emerald-600">Owner Management Panel</span>
+                        </div>
+                        <h3 class="text-xl sm:text-2xl font-serif font-bold text-stone-900 mt-1">Casa D'Laman Qaseh Control Center</h3>
+                    </div>
+                    <button onclick="ownerLogout()" class="bg-stone-100 hover:bg-stone-200 text-stone-700 font-medium px-4 py-2 rounded-xl text-xs transition">
+                        <i class="fa-solid fa-right-from-bracket mr-1"></i> Logout Owner
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <!-- Left: Date Pricing Editor -->
+                    <div class="lg:col-span-2 bg-stone-50 p-6 rounded-3xl border border-stone-200/80 space-y-6">
+                        <div>
+                            <h4 class="text-base font-serif font-bold text-stone-900">Date Pricing & Status Editor</h4>
+                            <p class="text-xs text-stone-500">Click any date in the calendar above/guest view, then modify its rates and status here.</p>
+                        </div>
+
+                        <div id="owner-edit-panel" class="bg-white p-5 rounded-2xl shadow-sm border border-stone-200 space-y-4">
+                            <div class="flex items-center justify-between">
+                                <span id="edit-selected-date-label" class="text-sm font-bold text-brand-600">Select a date from calendar</span>
+                                <span id="edit-category-badge" class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-stone-100 text-stone-600">Standard</span>
+                            </div>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-xs font-semibold uppercase tracking-wider text-stone-600 mb-1">Original Price (MYR)</label>
+                                    <div class="relative">
+                                        <span class="absolute left-3 top-2.5 text-xs text-stone-400 font-bold">RM</span>
+                                        <input type="number" id="edit-original-price" class="w-full pl-10 pr-4 py-2 text-sm border border-stone-300 rounded-xl focus:ring-2 focus:ring-brand-500 focus:outline-none font-bold text-stone-800">
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold uppercase tracking-wider text-emerald-700 mb-1">Discounted Rate (MYR)</label>
+                                    <div class="relative">
+                                        <span class="absolute left-3 top-2.5 text-xs text-emerald-500 font-bold">RM</span>
+                                        <input type="number" id="edit-discount-price" class="w-full pl-10 pr-4 py-2 text-sm border border-emerald-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:outline-none font-bold text-emerald-700 bg-emerald-50/30">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-xs font-semibold uppercase tracking-wider text-stone-600 mb-1">Category</label>
+                                    <select id="edit-category" class="w-full px-4 py-2 text-sm border border-stone-300 rounded-xl focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                                        <option value="Weekday">Weekday</option>
+                                        <option value="Weekend">Weekend</option>
+                                        <option value="Public Hol">Public Holiday</option>
+                                        <option value="School Hol">School Holiday</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold uppercase tracking-wider text-stone-600 mb-1">Cancellation Policy</label>
+                                    <select id="edit-policy" class="w-full px-4 py-2 text-sm border border-stone-300 rounded-xl focus:ring-2 focus:ring-brand-500 focus:outline-none">
+                                        <option value="14D Free">14 Days Free Refundable</option>
+                                        <option value="7D Partial">7 Days Partial Refundable</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="flex flex-col sm:flex-row items-center justify-between pt-2 gap-3">
+                                <label class="flex items-center space-x-2 cursor-pointer">
+                                    <input type="checkbox" id="edit-is-booked" class="w-4 h-4 text-rose-600 rounded border-stone-300 focus:ring-rose-500">
+                                    <span class="text-xs font-medium text-stone-700">Mark as Booked (Unavailable)</span>
+                                </label>
+
+                                <label class="flex items-center space-x-2 cursor-pointer bg-amber-50 px-3 py-1.5 rounded-xl border border-amber-200">
+                                    <input type="checkbox" id="apply-monthly-bulk" class="w-4 h-4 text-amber-600 rounded border-stone-300 focus:ring-amber-500">
+                                    <span class="text-xs font-semibold text-amber-800">Apply to matching category this month</span>
+                                </label>
+                            </div>
+
+                            <div id="owner-customer-details" class="bg-stone-50 p-3 rounded-xl border border-stone-200 text-xs text-stone-600 space-y-1 hidden">
+                                <div class="font-bold text-stone-800"><i class="fa-solid fa-user-check text-emerald-600 mr-1"></i> Guest Reservation Record:</div>
+                                <div>Name: <span id="booked-customer-name" class="font-semibold text-stone-900">-</span></div>
+                                <div>Phone: <span id="booked-customer-phone" class="font-semibold text-stone-900">-</span></div>
+                            </div>
+
+                            <button onclick="saveOwnerDateSettings()" class="w-full bg-brand-500 hover:bg-brand-600 text-white font-medium py-2.5 rounded-xl text-sm shadow transition">
+                                Update & Save Date Settings (Live)
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Right: Promotional & Photo Manager -->
+                    <div class="space-y-6">
+                        <div class="bg-stone-50 p-6 rounded-3xl border border-stone-200/80 space-y-4">
+                            <h4 class="text-base font-serif font-bold text-stone-900">Promotional Banner Manager</h4>
+                            <div class="space-y-3">
+                                <div>
+                                    <label class="block text-xs font-semibold uppercase tracking-wider text-stone-600 mb-1">Banner Headline</label>
+                                    <input type="text" id="owner-banner-title" class="w-full px-4 py-2 text-xs border border-stone-300 rounded-xl bg-white focus:outline-none">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold uppercase tracking-wider text-stone-600 mb-1">Banner Description</label>
+                                    <textarea id="owner-banner-desc" rows="2" class="w-full px-4 py-2 text-xs border border-stone-300 rounded-xl bg-white focus:outline-none"></textarea>
+                                </div>
+                                <button onclick="updatePromoBanner()" class="w-full bg-stone-900 hover:bg-stone-800 text-white font-medium py-2 rounded-xl text-xs transition">
+                                    Publish Banner Update
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="bg-stone-50 p-6 rounded-3xl border border-stone-200/80 space-y-4">
+                            <h4 class="text-base font-serif font-bold text-stone-900">Add Photo to Gallery</h4>
+                            <div class="space-y-3">
+                                <div>
+                                    <label class="block text-xs font-semibold uppercase tracking-wider text-stone-600 mb-1">Image URL</label>
+                                    <input type="url" id="new-photo-url" placeholder="https://images.unsplash.com/..." class="w-full px-4 py-2 text-xs border border-stone-300 rounded-xl bg-white focus:outline-none">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold uppercase tracking-wider text-stone-600 mb-1">Caption / Title</label>
+                                    <input type="text" id="new-photo-title" placeholder="e.g. Cozy Bedroom Suite" class="w-full px-4 py-2 text-xs border border-stone-300 rounded-xl bg-white focus:outline-none">
+                                </div>
+                                <button onclick="addNewPhoto()" class="w-full bg-stone-900 hover:bg-stone-800 text-white font-medium py-2 rounded-xl text-xs transition">
+                                    Upload & Add Photo
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-white border-t border-stone-200 mt-16 py-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-stone-500">
+            <div>
+                <p class="font-serif font-bold text-stone-900 text-sm">Casa D'Laman Qaseh <span class="text-brand-500 font-sans italic font-normal">~connecting hearts~</span></p>
+                <p class="mt-1">Direct WhatsApp Booking & Live Calendar Platform.</p>
+            </div>
+            <div class="flex items-center space-x-6">
+                <span>Hosts: Norrizah (+6017 335 5970) | Illiana (+6013 353 7603) | Zainul Afiq (+6018 663 8327)</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT LOGIC WITH LOCALSTORAGE PERSISTENCE -->
+    <script>
+        let currentYear = 2026;
+        let currentMonth = 9; // October
+        let ownerLoggedIn = false;
+        let selectedDateKey = null;
+        let activeGuestDateKey = null;
+        let currentEditingKey = null;
+
+        let calendarData = {};
+        let galleryPhotos = [
+            { url: "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=1200&q=80", title: "Casa D'Laman Qaseh Front View", cat: "Exterior & Façade" },
+            { url: "https://images.unsplash.com/photo-1576013551627-0cc20b96c2a7?auto=format&fit=crop&w=1200&q=80", title: "Serenity Gem And Private Swimming Pool", cat: "Pool & Recreation" },
+            { url: "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=1200&q=80", title: "Spacious & Cozy Living Area", cat: "Interior" },
+            { url: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1200&q=80", title: "Private Events & Garden Lawn", cat: "Events & Lawn" }
+        ];
+
+        let promoBanner = {
+            title: "School Holiday & Year-End Special Discount!",
+            desc: "Enjoy 14-days free refundable booking or special promotional rates across all weekends this month."
+        };
+
+        // Load data from LocalStorage if available
+        function loadAppData() {
+            const savedCalendar = localStorage.getItem('casa_calendar_data');
+            if (savedCalendar) {
+                calendarData = JSON.parse(savedCalendar);
+            } else {
+                initDefaultCalendar();
+            }
+
+            const savedPhotos = localStorage.getItem('casa_gallery_photos');
+            if (savedPhotos) {
+                galleryPhotos = JSON.parse(savedPhotos);
+            }
+
+            const savedPromo = localStorage.getItem('casa_promo_banner');
+            if (savedPromo) {
+                promoBanner = JSON.parse(savedPromo);
+            }
+        }
+
+        function saveAppData() {
+            localStorage.setItem('casa_calendar_data', JSON.stringify(calendarData));
+            localStorage.setItem('casa_gallery_photos', JSON.stringify(galleryPhotos));
+            localStorage.setItem('casa_promo_banner', JSON.stringify(promoBanner));
+        }
+
+        function initDefaultCalendar() {
+            const daysInOct = 31;
+            for(let d=1; d<=daysInOct; d++) {
+                let key = `2026-9-${d}`;
+                let dayOfWeek = new Date(2026, 9, d).getDay();
+                let cat = "Weekday";
+                let origPrice = 450;
+                let discPrice = 350;
+                let policy = "14D Free";
+                let isBooked = false;
+
+                if(dayOfWeek === 0 || dayOfWeek === 6) {
+                    cat = "Weekend";
+                    origPrice = 650;
+                    discPrice = 550;
+                }
+                if(d === 15 || d === 16) {
+                    cat = "Public Hol";
+                    origPrice = 880;
+                    discPrice = 780;
+                }
+                if(d >= 22 && d <= 26) {
+                    cat = "School Hol";
+                    origPrice = 680;
+                    discPrice = 580;
+                    policy = "7D Partial";
+                }
+                if(d === 8 || d === 9) {
+                    isBooked = true;
+                }
+
+                calendarData[key] = {
+                    originalPrice: origPrice,
+                    discountPrice: discPrice,
+                    category: cat,
+                    policy: policy,
+                    isBooked: isBooked,
+                    customerName: isBooked ? "Encik Farhan" : "",
+                    customerPhone: isBooked ? "+60123456789" : ""
+                };
+            }
+            saveAppData();
+        }
+
+        // Slideshow Rendering
+        let slideIndex = 0;
+        function renderGallery() {
+            const wrapper = document.getElementById('slideshow-wrapper');
+            const thumbContainer = document.getElementById('thumbnail-container');
+            wrapper.innerHTML = '';
+            thumbContainer.innerHTML = '';
+
+            galleryPhotos.forEach((photo, idx) => {
+                let activeClass = idx === slideIndex ? 'active' : '';
+                wrapper.innerHTML += `
+                    <div class="carousel-item ${activeClass} h-full w-full relative">
+                        <img src="${photo.url}" alt="${photo.title}" class="w-full h-full object-cover">
+                        <div class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-4 text-white">
+                            <span class="text-xs font-semibold uppercase tracking-wider bg-brand-500 px-2.5 py-0.5 rounded-md">${photo.cat || 'Gallery'}</span>
+                            <h3 class="text-lg font-bold mt-1">${photo.title}</h3>
+                        </div>
+                    </div>
+                `;
+
+                let borderStyle = idx === slideIndex ? 'border-brand-500' : 'border-transparent hover:border-stone-300';
+                thumbContainer.innerHTML += `
+                    <button onclick="currentSlide(${idx})" class="w-20 h-14 rounded-xl overflow-hidden border-2 ${borderStyle} shrink-0 focus:outline-none">
+                        <img src="${photo.url}" class="w-full h-full object-cover">
+                    </button>
+                `;
+            });
+
+            // Add navigation arrows
+            wrapper.innerHTML += `
+                <button onclick="prevSlide()" class="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/50 hover:bg-black/80 text-white flex items-center justify-center transition">
+                    <i class="fa-solid fa-chevron-left"></i>
+                </button>
+                <button onclick="nextSlide()" class="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/50 hover:bg-black/80 text-white flex items-center justify-center transition">
+                    <i class="fa-solid fa-chevron-right"></i>
+                </button>
+            `;
+        }
+
+        function showSlide(n) {
+            slideIndex = (n + galleryPhotos.length) % galleryPhotos.length;
+            renderGallery();
+        }
+        function nextSlide() { showSlide(slideIndex + 1); }
+        function prevSlide() { showSlide(slideIndex - 1); }
+        function currentSlide(n) { showSlide(n); }
+
+        // Banner Rendering
+        function renderBanner() {
+            document.getElementById('banner-title').innerText = promoBanner.title;
+            document.getElementById('banner-desc').innerText = promoBanner.desc;
+            document.getElementById('owner-banner-title').value = promoBanner.title;
+            document.getElementById('owner-banner-desc').value = promoBanner.desc;
+        }
+
+        // Interface Toggle & Owner Login
+        function toggleInterface() {
+            if(!ownerLoggedIn) {
+                document.getElementById('login-modal').classList.remove('hidden');
+            } else {
+                ownerLogout();
+            }
+        }
+        function closeLoginModal() { document.getElementById('login-modal').classList.add('hidden'); }
+
+        function handleOwnerLogin(e) {
+            e.preventDefault();
+            const otp = document.getElementById('owner-otp').value;
+            if(otp === '5398') {
+                ownerLoggedIn = true;
+                closeLoginModal();
+                document.getElementById('owner-dashboard').classList.remove('hidden');
+                document.getElementById('interface-toggle-btn').innerHTML = `<i class="fa-solid fa-house text-xs"></i><span>Switch to Guest View</span>`;
+                alert('Owner verification successful! Changes saved will now update live.');
+                renderCalendar();
+            } else {
+                alert('Invalid OTP Passcode. Please enter 5398.');
+            }
+        }
+
+        function ownerLogout() {
+            ownerLoggedIn = false;
+            document.getElementById('owner-dashboard').classList.add('hidden');
+            document.getElementById('interface-toggle-btn').innerHTML = `<i class="fa-solid fa-lock text-xs"></i><span>Owner Login</span>`;
+            renderCalendar();
+        }
+
+        // Calendar Render Logic
+        const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+        function changeMonth(direction) {
+            currentMonth += direction;
+            if(currentMonth > 11) { currentMonth = 0; currentYear++; }
+            if(currentMonth < 0) { currentMonth = 11; currentYear--; }
+            renderCalendar();
+        }
+
+        function renderCalendar() {
+            document.getElementById('current-month-label').innerText = `${monthNames[currentMonth]} ${currentYear}`;
+            const grid = document.getElementById('calendar-grid');
+            grid.innerHTML = '';
+
+            const firstDayIndex = new Date(currentYear, currentMonth, 1).getDay();
+            const totalDays = new Date(currentYear, currentMonth + 1, 0).getDate();
+
+            for(let i=0; i<firstDayIndex; i++) {
+                let emptyCell = document.createElement('div');
+                emptyCell.className = "border border-transparent p-1 min-h-[75px]";
+                grid.appendChild(emptyCell);
+            }
+
+            for(let d=1; d<=totalDays; d++) {
+                let key = `${currentYear}-${currentMonth}-${d}`;
+                if(!calendarData[key]) {
+                    let dow = new Date(currentYear, currentMonth, d).getDay();
+                    calendarData[key] = {
+                        originalPrice: dow === 0 || dow === 6 ? 650 : 450,
+                        discountPrice: dow === 0 || dow === 6 ? 550 : 350,
+                        category: dow === 0 || dow === 6 ? "Weekend" : "Weekday",
+                        policy: "14D Free",
+                        isBooked: false,
+                        customerName: "",
+                        customerPhone: ""
+                    };
+                }
+
+                let data = calendarData[key];
+                let cell = document.createElement('div');
+
+                let bgClass = "bg-white border-stone-200 hover:border-brand-500";
+                let badgeBg = "bg-stone-100 text-stone-600";
+
+                if(data.isBooked) {
+                    bgClass = "bg-rose-50 border-rose-200";
+                    badgeBg = "bg-rose-100 text-rose-700";
+                } else if(data.category === "Weekend") {
+                    bgClass = "bg-blue-50/50 border-blue-200";
+                    badgeBg = "bg-blue-100 text-blue-700";
+                } else if(data.category === "Public Hol") {
+                    bgClass = "bg-amber-50/60 border-amber-200";
+                    badgeBg = "bg-amber-100 text-amber-700";
+                } else if(data.category === "School Hol") {
+                    bgClass = "bg-purple-50/50 border-purple-200";
+                    badgeBg = "bg-purple-100 text-purple-700";
+                }
+
+                if(selectedDateKey === key) {
+                    bgClass += " ring-2 ring-brand-500 shadow-md";
+                }
+
+                cell.className = `border rounded-xl p-1.5 sm:p-2 min-h-[85px] sm:min-h-[100px] flex flex-col justify-between relative cursor-pointer transition overflow-hidden ${bgClass}`;
+
+                cell.onclick = () => {
+                    if(ownerLoggedIn) {
+                        selectOwnerDate(key);
+                    } else {
+                        selectGuestDate(key);
+                    }
+                };
+
+                let priceHtml = '';
+                if(data.isBooked) {
+                    priceHtml = `<span class="text-[10px] font-bold text-rose-600 uppercase">Booked</span>`;
+                } else {
+                    let activePrice = Math.min(data.originalPrice, data.discountPrice);
+                    let oldPrice = Math.max(data.originalPrice, data.discountPrice);
+
+                    priceHtml = `
+                        <div class="flex flex-col items-end leading-tight">
+                            <span class="text-[9px] sm:text-[10px] line-through text-blue-600 font-medium">RM ${oldPrice}</span>
+                            <span class="text-xs sm:text-sm font-bold text-rose-600">RM ${activePrice}</span>
+                        </div>
+                    `;
+                }
+
+                cell.innerHTML = `
+                    <div class="flex items-center justify-between text-[10px] sm:text-xs font-bold text-stone-700">
+                        <span>${d}</span>
+                        <span class="text-[8px] sm:text-[9px] px-1 rounded font-semibold truncate max-w-[55px] sm:max-w-[70px] ${badgeBg}">${data.category}</span>
+                    </div>
+                    <div class="mt-1 flex items-end justify-between">
+                        <span class="text-[8px] text-stone-400 font-medium truncate max-w-[40px]">${data.isBooked ? 'Full' : data.policy.split(' ')[0]}</span>
+                        ${priceHtml}
+                    </div>
+                `;
+
+                grid.appendChild(cell);
+            }
+        }
+
+        function selectGuestDate(key) {
+            selectedDateKey = key;
+            activeGuestDateKey = key;
+            renderCalendar();
+
+            let data = calendarData[key];
+            if(data.isBooked) {
+                document.getElementById('summary-date-text').innerText = `${dFormat(key)} - Already Booked`;
+                document.getElementById('summary-price-display').innerText = 'Not Available';
+                document.getElementById('summary-original-price-display').innerText = '';
+                document.getElementById('summary-policy-badge').classList.add('hidden');
+                return;
+            }
+
+            let activePrice = Math.min(data.originalPrice, data.discountPrice);
+            let oldPrice = Math.max(data.originalPrice, data.discountPrice);
+
+            document.getElementById('summary-date-text').innerText = `Check-in Date: ${dFormat(key)} (${data.category})`;
+            document.getElementById('summary-price-display').innerText = `RM ${activePrice}`;
+            document.getElementById('summary-original-price-display').innerText = `RM ${oldPrice}`;
+
+            const badge = document.getElementById('summary-policy-badge');
+            badge.classList.remove('hidden');
+            badge.firstElementChild.innerText = data.policy === "14D Free" ? "14 Days Free Refundable Special" : "7 Days Partial Refundable";
+        }
+
+        function dFormat(key) {
+            let parts = key.split('-');
+            return `${parts[2]} ${monthNames[parts[1]]} ${parts[0]}`;
+        }
+
+        function sendWhatsAppBooking(e) {
+            e.preventDefault();
+            if(!activeGuestDateKey) {
+                alert('Please select an available date from the calendar first.');
+                return;
+            }
+
+            let name = document.getElementById('guest-name').value;
+            let phone = document.getElementById('guest-phone').value;
+            let targetNum = document.getElementById('host-whatsapp-target').value;
+            let data = calendarData[activeGuestDateKey];
+            let activePrice = Math.min(data.originalPrice, data.discountPrice);
+
+            let text = `*New Homestay Booking Inquiry*%0A` +
+                       `🏡 *Casa D'Laman Qaseh* (~connecting hearts~)%0A%0A` +
+                       `📅 *Date:* ${dFormat(activeGuestDateKey)}%0A` +
+                       `🏷️ *Category:* ${data.category}%0A` +
+                       `💰 *Rate:* RM ${activePrice} (${data.policy})%0A` +
+                       `👤 *Guest Name:* ${name}%0A` +
+                       `📞 *Phone Number:* ${phone}%0A%0A` +
+                       `Please confirm availability and booking details. Thank you!`;
+
+            let waUrl = `https://wa.me/${targetNum}?text=${text}`;
+            window.open(waUrl, '_blank');
+        }
+
+        function selectOwnerDate(key) {
+            currentEditingKey = key;
+            selectedDateKey = key;
+            renderCalendar();
+
+            let data = calendarData[key];
+            document.getElementById('edit-selected-date-label').innerText = `Editing Date: ${dFormat(key)}`;
+            document.getElementById('edit-original-price').value = data.originalPrice;
+            document.getElementById('edit-discount-price').value = data.discountPrice;
+            document.getElementById('edit-category').value = data.category;
+            document.getElementById('edit-policy').value = data.policy;
+            document.getElementById('edit-is-booked').checked = data.isBooked;
+
+            const custDiv = document.getElementById('owner-customer-details');
+            if(data.isBooked && data.customerName) {
+                custDiv.classList.remove('hidden');
+                document.getElementById('booked-customer-name').innerText = data.customerName;
+                document.getElementById('booked-customer-phone').innerText = data.customerPhone;
+            } else {
+                custDiv.classList.add('hidden');
+            }
+        }
+
+        function saveOwnerDateSettings() {
+            if(!currentEditingKey) {
+                alert('Please click a date on the calendar first.');
+                return;
+            }
+
+            let origP = parseFloat(document.getElementById('edit-original-price').value) || 0;
+            let discP = parseFloat(document.getElementById('edit-discount-price').value) || 0;
+            let cat = document.getElementById('edit-category').value;
+            let policy = document.getElementById('edit-policy').value;
+            let isBooked = document.getElementById('edit-is-booked').checked;
+            let applyMonthlyBulk = document.getElementById('apply-monthly-bulk').checked;
+
+            if(applyMonthlyBulk) {
+                for(let k in calendarData) {
+                    if(k.startsWith(`${currentYear}-${currentMonth}-`) && calendarData[k].category === cat) {
+                        calendarData[k].originalPrice = origP;
+                        calendarData[k].discountPrice = discP;
+                        calendarData[k].policy = policy;
+                    }
+                }
+                alert(`Successfully updated all "${cat}" dates in ${monthNames[currentMonth]} ${currentYear} (Live Saved)!`);
+            } else {
+                calendarData[currentEditingKey].originalPrice = origP;
+                calendarData[currentEditingKey].discountPrice = discP;
+                calendarData[currentEditingKey].category = cat;
+                calendarData[currentEditingKey].policy = policy;
+                calendarData[currentEditingKey].isBooked = isBooked;
+                alert(`Date ${dFormat(currentEditingKey)} successfully updated (Live Saved)!`);
+            }
+
+            saveAppData();
+            renderCalendar();
+        }
+
+        function updatePromoBanner() {
+            promoBanner.title = document.getElementById('owner-banner-title').value;
+            promoBanner.desc = document.getElementById('owner-banner-desc').value;
+            saveAppData();
+            renderBanner();
+            alert('Promotional banner updated successfully live!');
+        }
+
+        function addNewPhoto() {
+            let url = document.getElementById('new-photo-url').value;
+            let title = document.getElementById('new-photo-title').value;
+            if(!url || !title) {
+                alert('Please enter both image URL and caption.');
+                return;
+            }
+
+            galleryPhotos.unshift({ url: url, title: title, cat: "Owner Upload" });
+            saveAppData();
+            renderGallery();
+
+            alert('New photo successfully added to gallery live!');
+            document.getElementById('new-photo-url').value = '';
+            document.getElementById('new-photo-title').value = '';
+        }
+
+        window.onload = function() {
+            loadAppData();
+            renderGallery();
+            renderBanner();
+            renderCalendar();
+        };
+    </script>
+</body>
+</html>
